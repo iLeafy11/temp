@@ -37,7 +37,8 @@ struct list_head {
  */
 static inline void INIT_LIST_HEAD(struct list_head *head)
 {
-    head->next = head; head->prev = head;
+    head->next = head;
+    head->prev = head;
 }
 
 /**
@@ -62,7 +63,8 @@ static inline void list_add_tail(struct list_head *node, struct list_head *head)
 static inline void list_remove(struct list_head *node)
 {
     struct list_head *next = node->next, *prev = node->prev;
-    next->prev = prev; prev->next = next;
+    next->prev = prev;
+    prev->next = next;
 }
 
 /**
@@ -92,10 +94,10 @@ static inline int list_is_singular(const struct list_head *head)
  */
 static inline void list_replace(struct list_head *old, struct list_head *new)
 {
-	new->next = old->next;
-	new->next->prev = new;
-	new->prev = old->prev;
-	new->prev->next = new;
+    new->next = old->next;
+    new->next->prev = new;
+    new->prev = old->prev;
+    new->prev->next = new;
 }
 
 /**
@@ -105,13 +107,13 @@ static inline void list_replace(struct list_head *old, struct list_head *new)
  */
 static inline void list_swap(struct list_head *entry1, struct list_head *entry2)
 {
-	struct list_head *pos = entry2->prev;
+    struct list_head *pos = entry2->prev;
 
-	list_remove(entry2);
-	list_replace(entry1, entry2);
-	if (pos == entry1)
-		pos = entry2;
-	list_add_tail(entry1, pos);
+    list_remove(entry2);
+    list_replace(entry1, entry2);
+    if (pos == entry1)
+        pos = entry2;
+    list_add_tail(entry1, pos);
 }
 
 /**
@@ -149,7 +151,7 @@ static inline void list_cut_position(struct list_head *head_to,
 
     if (list_empty(head_from))
         return;
-    
+
     if (list_is_singular(head_from) && (head_from->next != node && head_from != node))
         return;
 

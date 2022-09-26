@@ -56,10 +56,21 @@ static inline int ilog2(uint32_t n)
 
 static void xs_allocate_data(xs *x, size_t len, bool reallocate)
 {
+    /*
+     * This function can be improved by:
+     * Delete the passing the arg @len. Therefore, change the if stmt,
+     * using just x->capacity to determine whether @x is small, middle, or large string.
+     */
+
+    /* Small string */
+    if (len < MIDDLE_STRING_LEN) {
+        return;
+    }
+
     /* Medium string */
     if (len < LARGE_STRING_LEN) {
         x->ptr = reallocate ? realloc(x->ptr, (size_t) 1 << x->capacity)
-                            : malloc((size_t) 1 << x->capacity);
+                 : malloc((size_t) 1 << x->capacity);
         x->is_large_string = 0;
         return;
     }
@@ -69,7 +80,7 @@ static void xs_allocate_data(xs *x, size_t len, bool reallocate)
 
     /* The extra 4 bytes are used to store the reference count */
     x->ptr = reallocate ? realloc(x->ptr, (size_t)(1 << x->capacity) + 4)
-                        : malloc((size_t)(1 << x->capacity) + 4);
+             : malloc((size_t)(1 << x->capacity) + 4);
 
     xs_set_refcnt(x, 1);
 }
@@ -93,6 +104,7 @@ static inline int xs_get_refcnt(const xs *x)
         return 0;
     return *(int *) ((size_t) x->ptr);
 }
+
 /*
  * xs_new create a xs string, allocate the necessary memory and copy the
  * the bytes from p to xs_data(x). If strlen(p) is greater or equal to
@@ -225,8 +237,8 @@ xs *xs_trim(xs *x, const char *trimset)
     /* similar to strspn/strpbrk but it operates on binary data */
     uint8_t mask[32] = {0};
 
-#define check_bit(byte) (/* CCC */ mask[(uint8_t) byte / 8] & 1 << (uint8_t) byte % 8)
-#define set_bit(byte) (/* SSS */ mask[(uint8_t) byte / 8] |= 1 << (uint8_t) byte % 8)
+#define check_bit(byte) (mask[(uint8_t) byte >> 3] & 1 << (uint8_t) byte & 7)
+#define set_bit(byte) (mask[(uint8_t) byte >> 3] |= 1 << (uint8_t) byte & 7)
     size_t i, slen = xs_size(x), trimlen = strlen(trimset);
 
     for (i = 0; i < trimlen; i++)
@@ -267,6 +279,7 @@ void xs_clean(xs *x)
 {
     if (xs_is_ptr(x)) {
         free(x->ptr);
+        x->ptr = NULL;
     }
     memset(x, 0, sizeof(xs));
     return;
