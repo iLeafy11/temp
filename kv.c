@@ -74,9 +74,9 @@ char *kvFindList(struct list_head *cell, char *key)
 {
     xs k, v;
     while (cell) {
-        k = ((KV *)(list_entry(cell, ListCell, list)->value))->key;
+        k = ((KV *) (list_entry(cell, ListCell, list)->value))->key;
         if (!strcmp(xs_data(&k), key)) {
-            v = ((KV *)(list_entry(cell, ListCell, list)->value))->value;
+            v = ((KV *) (list_entry(cell, ListCell, list)->value))->value;
             return xs_data(&v);
         }
         cell = cell->next;

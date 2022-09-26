@@ -146,12 +146,16 @@ int main(void)
     }
     LIST_HEAD(list);
     char buf[256];
+    char *key, *value, *save;
     while (fgets(buf, 256, fp)) {
         list_alloc_add_tail(&list, buf);
+        key = strtok_r(buf, ", ", &save);
+        value = strtok_r(NULL, "\n", &save);
+        // printf("%s %s\n", key, value);
     }
 
-    list_merge_sort(&list);
     fclose(fp);
+    list_merge_sort(&list);
     assert(validate(&list));
     list_display(&list);
     list_free(&list);

@@ -11,6 +11,13 @@ typedef struct KV {
     xs value;
 } KV;
 
+/*
+typedef struct KVList {
+    KV value;
+    struct list_head list;
+} kvlist;
+*/
+// do not need to allocate another block of memory
 
 KV *kvNew(char *, char *);
 void kvDel(KV *);

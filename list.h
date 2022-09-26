@@ -241,3 +241,4 @@ typedef bool (*ListIterator)(void *);
 
 void listDel(struct list_head *);
 IterationResult listForEach(struct list_head *, ListIterator);
+
