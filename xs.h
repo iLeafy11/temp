@@ -65,15 +65,15 @@ typedef union {
     };
 } xs;
 
-int xs_type(const xs *x);
-char *xs_data(const xs *x);
-size_t xs_size(const xs *x);
-size_t xs_capacity(const xs *x);
+int xs_type(const xs *);
+char *xs_data(const xs *);
+size_t xs_size(const xs *);
+size_t xs_capacity(const xs *);
 
-xs *xs_new(xs *x, const void *p);
-xs *xs_grow(xs *x, size_t len);
-xs *xs_concat(xs *string, const xs *prefix, const xs *suffix);
-xs *xs_trim(xs *x, const char *trimset);
-void xs_clean(xs *x);
+xs *xs_new(xs *, const char *);
+xs *xs_grow(xs *, size_t);
+xs *xs_concat(xs *, const xs *, const xs *);
+xs *xs_trim(xs *, const char *);
+void xs_clean(xs *);
 
 #endif

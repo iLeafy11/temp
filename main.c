@@ -87,6 +87,19 @@ void list_merge_sort(struct list_head *list)
     list_splice_tail(&sorted, list);
 }
 
+void list_reverse(struct list_head *list)
+{
+    if (!list || list_empty(list))
+        return;
+
+    struct list_head *it;
+    list_for_each_prev_reverse(it, list) {
+        list_swap_ptr((char **) &it->next, (char **) &it->prev);
+    }
+
+    list_swap_ptr((char **) &list->next, (char **) &list->prev);
+}
+
 void list_display(struct list_head *list)
 {
     struct list_head *walk;
@@ -110,6 +123,17 @@ static bool validate(struct list_head *list)
                    xs_data(&list_entry(node->next, list_ele_t, list)->value)) > 0)
             return false;
     }
+
+    list_reverse(list);
+
+    list_for_each (node, list) {
+        if (node->next == list)
+            break;
+        if (strcmp(xs_data(&list_entry(node, list_ele_t, list)->value),
+                   xs_data(&list_entry(node->next, list_ele_t, list)->value)) < 0)
+            return false;
+    }
+
     return true;
 }
 
@@ -127,9 +151,9 @@ int main(void)
     }
 
     list_merge_sort(&list);
-    list_display(&list);
     fclose(fp);
     assert(validate(&list));
+    list_display(&list);
     list_free(&list);
     return 0;
 }

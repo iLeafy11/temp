@@ -101,6 +101,18 @@ static inline void list_replace(struct list_head *old, struct list_head *new)
 }
 
 /**
+ * list_swap_ptr - swap two pointer's value
+ * @ptr1: the first pointer
+ * @ptr2: the second pointer
+ */
+static inline void list_swap_ptr(char **ptr1, char **ptr2)
+{
+    char *tmp = *ptr1;
+    *ptr1 = *ptr2;
+    *ptr2 = tmp;
+}
+
+/**
  * list_swap - replace entry1 with entry2 and re-add entry1 at entry2's position
  * @entry1: the location to place entry2
  * @entry2: the location to place entry1
@@ -195,6 +207,14 @@ static inline void list_cut_position(struct list_head *head_to,
     for (node = (head)->next; node != (head); node = node->next)
 
 /**
+ * list_for_each_prev_reverse - iterate over a list backwards for reverse the list
+ * @node: list_head pointer used as iterator
+ * @head: pointer to the head of the list
+ */
+#define list_for_each_prev_reverse(node, head) \
+	for (node = (head->next); node != (head); node = node->prev)
+
+/**
  * shamelessly copy from linux/list.h
  * list_for_each_safe - iterate over a list safe against removal of list entry
  * @pos:	the &struct list_head to use as a loop cursor.
@@ -218,3 +238,6 @@ typedef struct Cell {
 } ListCell;
 
 typedef bool (*ListIterator)(void *);
+
+void listDel(struct list_head *);
+IterationResult listForEach(struct list_head *, ListIterator);

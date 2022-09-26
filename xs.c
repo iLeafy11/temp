@@ -56,7 +56,7 @@ static inline int ilog2(uint32_t n)
 
 static void xs_allocate_data(xs *x, size_t len, bool reallocate)
 {
-    /*
+    /**
      * This function can be improved by:
      * Delete the passing the arg @len. Therefore, change the if stmt,
      * using just x->capacity to determine whether @x is small, middle, or large string.
@@ -105,12 +105,12 @@ static inline int xs_get_refcnt(const xs *x)
     return *(int *) ((size_t) x->ptr);
 }
 
-/*
+/**
  * xs_new create a xs string, allocate the necessary memory and copy the
  * the bytes from p to xs_data(x). If strlen(p) is greater or equal to
  * LARGE_STRING_LEN, use string interning to share memory address if possible.
  */
-xs *xs_new(xs *x, const void *p)
+xs *xs_new(xs *x, const char *p)
 {
     *x = xs_literal_empty();
     size_t len = strlen(p) + 1;
